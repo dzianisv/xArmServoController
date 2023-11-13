@@ -5,11 +5,13 @@ from enum import Enum
 
 
 class Controller:
+    # check out (doc/LSC Series Servo Controller Communication Protocol V1.2.pdf)
     SIGNATURE               = 0x55
     CMD_SERVO_MOVE          = 0x03
     CMD_GET_BATTERY_VOLTAGE = 0x0f
     CMD_SERVO_STOP          = 0x14
     CMD_GET_SERVO_POSITION  = 0x15
+    CMD_ACTION_GROUP_RUN   = 0x06
 
     def __init__(self, com_port, debug=False):
         if com_port.startswith('COM'):
@@ -71,6 +73,13 @@ class Controller:
             raise ValueError('Parameter \'servos\' is not valid.')
 
         self._send(self.CMD_SERVO_MOVE, data)
+
+        if wait:
+            time.sleep(duration/1000)
+
+    def actionGroupRun(self, actionGroup: int, duration=1000, wait=False):
+        data = bytearray([actionGroup, duration & 0xff, (duration & 0xff00) >> 8])
+        self._send(self.CMD_ACTION_GROUP_RUN, data)
 
         if wait:
             time.sleep(duration/1000)
