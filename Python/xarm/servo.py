@@ -1,12 +1,12 @@
-from .util import Util
+from .util import Util, POSITION_LIMIT
 
 class Servo:
     def __init__(self, servo_id, position=500):
         self.servo_id = servo_id
 
         if isinstance(position, int):
-            if position < 0 or position > 1000:
-                raise ValueError('Position paramater must be between 0 and 1000')
+            if position < 0 or position > POSITION_LIMIT:
+                raise ValueError('position out of bound')
             self.__set_position(position)
         else:
             if isinstance(position, float):

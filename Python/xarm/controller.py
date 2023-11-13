@@ -1,6 +1,7 @@
 from .servo import Servo
-from .util import Util
+from .util import Util, POSITION_LIMIT
 import time
+from enum import Enum
 
 
 class Controller:
@@ -40,8 +41,8 @@ class Controller:
             if position == None:
                 raise ValueError('Parameter \'position\' missing.')
             if isinstance(position, int):
-                if position < 0 or position > 1000:
-                    raise ValueError('Parameter \'position\' must be between 0 and 1000.')
+                if position < 0 or position > POSITION_LIMIT:
+                    raise ValueError('Invalid \'position\'.')
             if isinstance(position, float):
                 if position < -125.0 or position > 125.0:
                     raise ValueError('Parameter \'position\' must be between -125.0 and 125.0.')
@@ -56,8 +57,8 @@ class Controller:
                     data.extend([servo.servo_id, servo.position & 0xff, (servo.position & 0xff00) >> 8])
                 elif len(servo) == 2 and isinstance(servo[0], int):
                     if isinstance(servo[1], int):
-                        if servo[1] < 0 or servo[1] > 1000:
-                            raise ValueError('Parameter \'position\' must be between 0 and 1000.')
+                        if servo[1] < 0 or servo[1] > POSITION_LIMIT:
+                            raise ValueError('Invalid \'position\'')
                         position = servo[1]
                     elif isinstance(servo[1], float):
                         if servo[1] < -125.0 or servo[1] > 125.0:
